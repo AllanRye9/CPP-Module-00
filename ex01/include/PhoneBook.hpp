@@ -9,7 +9,7 @@ class PhoneBook
         const int   max_contacts;
         int         current_nb;
         int         contact_nb;
-        int         array[8];
+        Contact     array[8];
     public:
         PhoneBook();
         ~PhoneBook();
