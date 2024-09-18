@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   PhoneBook.cpp                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: oallan <oallan@student.42abudhabi.ae>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/18 21:14:33 by oallan            #+#    #+#             */
+/*   Updated: 2024/09/18 21:14:36 by oallan           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/head.hpp"
 
 PhoneBook::PhoneBook(): max_contacts(8), current_nb(0), contact_nb(0){}
@@ -16,7 +28,7 @@ void PhoneBook::add_contacts()
     if (this->current_nb == 8)
         this->current_nb = 0;
     system("clear");
-    std::cout << "Type name: ";
+    std::cout << "Type First name: ";
     std::getline(std::cin, name);
     system("clear");
     std::cout << "Type Surname name: ";
@@ -37,8 +49,8 @@ void PhoneBook::add_contacts()
     this->array[this->current_nb].setLast(last);
     this->array[this->current_nb].setSecret(secret);
     this->current_nb++;
-    if (this->current_nb < 8)
-        this->contact_nb++;
+    if (contact_nb < max_contacts)
+        contact_nb++;
 }
 
 static void drawLine(int l)
@@ -48,6 +60,21 @@ static void drawLine(int l)
         std::cout << "-";
     }
     std::cout << std::endl;
+}
+
+static int validator(str s, int x)
+{
+    int i = 0;
+    if (!s[0])
+        return 1;
+    while(s[i])
+    {
+        if (s[0] == '\0' || (x < 0 && x == -2147483648) || (x > 7 && x >= 2147483647) 
+            || !(s[i] >= '0' && s[i] <= '9') || s[i] == ' ' || s[i] == '\t')
+            return 1;
+        i++;
+    }
+    return 0;
 }
 
 void PhoneBook::search_contacts()
@@ -66,15 +93,16 @@ void PhoneBook::search_contacts()
     {
         std::cout << "No Contact Found | Aborting ..." << std::endl; sleep(1); return ;
     }
-    std::cout << std::setw(5) << "Index" << "|";
-    std::cout << std::setw(15) << "First Name" << "|";
-    std::cout << std::setw(15) << "Last Name" << "|";
-    std::cout << std::setw(15) << "Nick Name" << "|" << std::endl;
-    drawLine(54);
+    drawLine(44);
+    std::cout << std::setw(10) << "Index" << "|";
+    std::cout << std::setw(10) << "First Name" << "|";
+    std::cout << std::setw(10) << "Last Name" << "|";
+    std::cout << std::setw(10) << "Nick Name" << "|" << std::endl;
+    drawLine(44);
     std::cout << std::endl;
     while(i < contact_nb)
     {
-        std::cout << std::setw(5) << i << "|";
+        std::cout << std::setw(10) << i << "|";
         name = this->array[i].getName();
         last = this->array[i].getLast();
         nick = this->array[i].getNick();
@@ -86,28 +114,27 @@ void PhoneBook::search_contacts()
             last = last.substr(0, 9) + ".";
         if (nick.length() > 9)
             nick = nick.substr(0, 9) + ".";
-        std::cout << std::setw(15) << name << "|";
-        std::cout << std::setw(15) << last << "|";
-        std::cout << std::setw(15) << nick << "|" << std::endl;
+        std::cout << std::setw(10) << name << "|";
+        std::cout << std::setw(10) << last << "|";
+        std::cout << std::setw(10) << nick << "|" << std::endl;
         i++;
     }
-    drawLine(54);
+    drawLine(44);
     std::cout << std::setw(10) << "Press the index and Enter: " << std::endl;
     std::getline(std::cin, ret);
     x = atoi(ret.c_str());
-    if (ret[0] == '\0' || (x < 0 && x == -2147483648) || (x > 0 && x <= 2147483647) || \
-        !std::isdigit(ret.c_str()))
-    {    std::cout << "Please Enter a valid Digit !" << std::endl; sleep(1); return;}
-    else if (x >= this->current_nb)
-    {    std::cout << "Contact Not Found ! | Aborting ..." << std::endl; sleep(1); return;}
-    drawLine(50);
-    std::cout << "Name:         " << this->array[x].getName() << std::endl;
-    std::cout << "Last Name:    " << this->array[x].getLast() << std::endl;
-    std::cout << "Nick Name:    "<< this->array[x].getNick() << std::endl;
-    std::cout << "Phone No:     " << this->array[x].getPhone() << std::endl;
-    std::cout << "Secret:       " << this->array[x].getSecret() << std::endl;
-    drawLine(50);
-    std::cout << "..........Press Any Key to Go Back Home ............" << std::endl;
+    if (validator(ret, x))
+    {std::cout << "Please Enter a valid Digit !" << std::endl; sleep(1); return;}
+    else if (x >= this->contact_nb)
+    {std::cout << "Contact Not Found ! | Aborting ..." << std::endl; sleep(1); return;}
+    drawLine(44);
+    std::cout << "First Name    :   "<< this->array[x].getName()<<std::endl;
+    std::cout << "Last Name     :   "<< this->array[x].getLast()<< std::endl;
+    std::cout << "Nick Name     :   "<< this->array[x].getNick()<< std::endl;
+    std::cout << "Phone No      :   "<< this->array[x].getPhone()<< std::endl;
+    std::cout << "Darkest Secret:   "<< this->array[x].getSecret()<< std::endl;
+    drawLine(44);
+    std::cout << "......Press Any Key to Go Back Home ........" << std::endl;
     getchar();
     getchar();
 }
