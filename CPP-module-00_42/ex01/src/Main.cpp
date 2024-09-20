@@ -23,12 +23,12 @@ int main()
         << "---------------- CONTACT MANAGER ----------------" << std::endl
         << "COMMANDS TO USE: " << std::setw(10) << "(1. ADD)" \
         << std::setw(10) << " (2. SEARCH) " << std::setw(10) << "(3. EXIT)" "\033[0m" << std::endl;
+        std::cout <<  "\033[32m" << "ENTER COMMAND: " << "\033[0m";
+        std::getline(std::cin, line);
         if (std::cin.eof())
-            exit(0);
-        else
         {
-            std::cout <<  "\033[32m" << "ENTER COMMAND: " << "\033[0m";
-            std::getline(std::cin, line);
+            std::cout << std::endl;
+            break;
         }
         if (!line.compare("ADD"))
             PhoneBook.add_contacts();
@@ -40,7 +40,7 @@ int main()
             sleep(1);
             break;
         }
-        else
+        else if (line.compare("ADD") || line.compare("SEARCH"))
         {
             std::cout << "\033[31m" << "Error: Invalid command. Please use the provided commands." << "\033[0m" << std::endl;
             sleep(1);

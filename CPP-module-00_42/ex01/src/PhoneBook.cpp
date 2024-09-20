@@ -20,7 +20,7 @@ static int isSpace(const str input)
 {
     int i = 0;
 
-    while (input[i] && (input[i] == ' ' || input[i] == '\t' || input[i] == '\n') && !(input[i + 1] >= 33 && input[i + 1] <= 126))
+    while (input[i] && (input[i + 1] == '\0' && (input[i] == ' ' || input[i] == '\t' || input[i] == '\n')))
     {
         return 1;
         i++;
@@ -37,8 +37,7 @@ static int isValidInput(const str input) {
     {
         if (isSpace(input))
             return 1;
-        else
-            i++;
+        i++;
     }
     return 0;
 }
@@ -71,15 +70,16 @@ static void displaySuccess(void)
 static int isNumeric(str s)
 {
     int i = 0;
-    if (s.size() == 0 || s.size() > 15)
-        return 1;
-    while(s[i])
+
+    while(s[i] && !isSpace(s))
     {
-        if (!(s[i] >= '0' && s[i] <= '9' && isSpace(s)))
-            return 1;
+        if (!(s[i] >= '0' && s[i] <= '9') || (s[i] == '\n' || s[i]== '\0'))
+            return 0;
+        if (s[i] == ' ' || s[i] == '\t')
+            i++;
         i++;
     }
-    return 0;
+    return 1;
 }
 
 int PhoneBook::add_contacts()
@@ -101,7 +101,7 @@ int PhoneBook::add_contacts()
         value = readInput(name);
         if (value)
             break;
-        else
+        else if (!value)
             errorMessage();
     }
     displaySuccess();
@@ -113,7 +113,7 @@ int PhoneBook::add_contacts()
         value = readInput(last);
         if (value)
             break;
-        else
+        else if (!value)
             errorMessage();
     }
     displaySuccess();
@@ -125,7 +125,7 @@ int PhoneBook::add_contacts()
         value = readInput(nick);
         if (value)
             break;
-        else
+        else if (!value)
             errorMessage();
     }
     displaySuccess();
@@ -134,13 +134,13 @@ int PhoneBook::add_contacts()
     {
         std::cout << "Type Phone Number: ";
         std::getline(std::cin, phone);
-        value = readInput(phone);
+        value = isNumeric(phone);
         if (value)
         {
             displaySuccess();
             break;
         }
-        if (!value && isNumeric(phone))
+        if (!value)
         {
             std::cout << "\033[31m" << "Error: Phone number must be numeric." << "\033[0m" << std::endl;
             value = 0;
@@ -154,7 +154,7 @@ int PhoneBook::add_contacts()
         value = readInput(secret);
         if (value)
             break;
-        else
+        else if (!value)
             errorMessage();
     }
     displaySuccess();
@@ -205,6 +205,8 @@ void PhoneBook::search_contacts()
     int i = 0;
     str ret;
     int x;
+    int flag = 0;
+    int z = 0, y = 0;
 
     system("clear");
     if (this->current_nb == 0)
@@ -238,13 +240,31 @@ void PhoneBook::search_contacts()
         i++;
     }
     drawLine(44);
-    std::cout << std::setw(10) << "Press the index and Enter: " << std::endl;
-    std::getline(std::cin, ret);
-    x = atoi(ret.c_str());
-    if (validator(ret, x))
-    {std::cout << "Please Enter a valid Digit !" << std::endl; sleep(1); return;}
-    else if (x >= this->contact_nb)
-    {std::cout << "Contact Not Found ! | Aborting ..." << std::endl; sleep(1); return;}
+    while(!flag)
+    {
+        std::cout << std::setw(10) << "Press the index and Enter: ";
+        std::getline(std::cin, ret);
+        if (std::cin.eof()) 
+            break;
+        std::cout << std::endl;
+        x = atoi(ret.c_str());
+        if (validator(ret, x))
+        {
+            std::cout << "\033[41m" << "Please Enter a valid Digit !" << " \033[0m" << std::endl; sleep(1);
+            z++;
+            flag = 0;
+        }
+        else if (x >= this->contact_nb)
+        {
+            std::cout << "\033[41m" << "Contact Not Found !" << " \033[0m" << std::endl; sleep(1);
+            y++;
+            flag = 0;
+        }
+        else
+            flag = 1;
+        if (z >= 2 || y >= 2)
+            system("clear");
+    }
     drawLine(44);
     std::cout << "First Name    :   "<< this->array[x].getName()<<std::endl;
     std::cout << "Last Name     :   "<< this->array[x].getLast()<< std::endl;
