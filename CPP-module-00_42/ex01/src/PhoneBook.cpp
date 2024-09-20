@@ -16,47 +16,148 @@ PhoneBook::PhoneBook(): max_contacts(8), current_nb(0), contact_nb(0){}
 
 PhoneBook::~PhoneBook(){}
 
+static int isSpace(const str input)
+{
+    int i = 0;
+
+    while (input[i] && (input[i] == ' ' || input[i] == '\t' || input[i] == '\n') && !(input[i + 1] >= 33 && input[i + 1] <= 126))
+    {
+        return 1;
+        i++;
+    }
+    return 0;
+}
+
 static int isValidInput(const str input) {
     int i = 0;
+
+    if (input.size() <= 0)
+        return 1;
     while(input[i])
     {
-        if (input[i] == ' ')
+        if (isSpace(input))
+            return 1;
+        else
+            i++;
+    }
+    return 0;
+}
+
+static int readInput(str output)
+{
+    if (std::cin.eof())
+    {
+        std::cout << std::endl;
+        exit(0);
+    }
+    if (output.size() <= 0)
+        return 0;
+    if (isValidInput(output)) {
+        return 0;
+    } 
+    return 1;
+}
+
+static void errorMessage(void)
+{
+    std::cout << "\033[31m" << "Error: Input cannot be empty or contain spaces, tabs, or new lines." << "\033[0m" << std::endl;
+}
+
+static void displaySuccess(void)
+{
+    std::cout << "\033[32m" << "Contact Added Successfully!" << "\033[0m" << std::endl;
+}
+
+static int isNumeric(str s)
+{
+    int i = 0;
+    if (s.size() == 0 || s.size() > 15)
+        return 1;
+    while(s[i])
+    {
+        if (!(s[i] >= '0' && s[i] <= '9' && isSpace(s)))
             return 1;
         i++;
     }
     return 0;
 }
 
-static int readInput(const str prompt, str output) {
-    std::cout << prompt;
-    std::getline(std::cin, output);  
-    if (isValidInput(output)) {
-        std::cout << "Error: Input cannot contain spaces, tabs, or new lines." << std::endl;
-        return 0;
-    } 
-    return 1;
-}
-
-void PhoneBook::add_contacts()
+int PhoneBook::add_contacts()
 {
     str name;
     str last;
     str secret;
     str nick;
     str phone;
+    int value = 0;
 
+    if (current_nb >= max_contacts)
+        current_nb = 0;
     system("clear");
-    if (!readInput("Type First name: ", name)) return;
-    system("clear");
-    if (!readInput("Type Surname name: ", last)) return;
-    system("clear");
-    if (!readInput("Nickname: ", nick)) return;
-    system("clear");
-    if (!readInput("Phone number: ", phone)) return;
-    system("clear");
-    if (!readInput("Type Darkest Secrets: ", secret)) return;
-    system("clear");
-
+    while (!value)
+    {
+        std::cout << "Type First name: ";
+        std::getline(std::cin, name);
+        value = readInput(name);
+        if (value)
+            break;
+        else
+            errorMessage();
+    }
+    displaySuccess();
+    value = 0;
+    while (!value)
+    {
+        std::cout << "Type Surname name: ";
+        std::getline(std::cin, last);
+        value = readInput(last);
+        if (value)
+            break;
+        else
+            errorMessage();
+    }
+    displaySuccess();
+    value = 0;
+    while (!value)
+    { 
+        std::cout << "Type Nick name: ";
+        std::getline(std::cin, nick);
+        value = readInput(nick);
+        if (value)
+            break;
+        else
+            errorMessage();
+    }
+    displaySuccess();
+    value = 0;
+    while (!value)
+    {
+        std::cout << "Type Phone Number: ";
+        std::getline(std::cin, phone);
+        value = readInput(phone);
+        if (value)
+        {
+            displaySuccess();
+            break;
+        }
+        if (!value && isNumeric(phone))
+        {
+            std::cout << "\033[31m" << "Error: Phone number must be numeric." << "\033[0m" << std::endl;
+            value = 0;
+        }
+    }
+    value = 0;
+    while (!value)
+    {
+        std::cout << "Type Darkest Secret: ";
+        std::getline(std::cin, secret);
+        value = readInput(secret);
+        if (value)
+            break;
+        else
+            errorMessage();
+    }
+    displaySuccess();
     this->array[this->current_nb].setName(name);
     this->array[this->current_nb].setNick(nick);
     this->array[this->current_nb].setPhone(phone);
@@ -65,6 +166,9 @@ void PhoneBook::add_contacts()
     this->current_nb++;
     if (contact_nb < max_contacts)
         contact_nb++;
+    sleep(1);
+    system("clear");
+    return 0;
 }
 
 static void drawLine(int l)

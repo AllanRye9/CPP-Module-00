@@ -15,30 +15,36 @@
 int main()
 {
     PhoneBook PhoneBook;
-
     str line;
-    str add = "ADD";
-    str search = "SEARCH";
-    str exit = "EXIT";
     system("clear");
-    std::cout << "---------------- CONTACT MANAGER ----------------" << std::endl;
     while(1)
     {
-        std::cout << "COMMANDS TO USE:" << std::setw(10) << "(1. ADD)" \
-        << std::setw(10) << " (2. SEARCH) " << std::setw(10) << "(3. EXIT)" << std::endl;
+        std::cout << "\033[44;37m"
+        << "---------------- CONTACT MANAGER ----------------" << std::endl
+        << "COMMANDS TO USE: " << std::setw(10) << "(1. ADD)" \
+        << std::setw(10) << " (2. SEARCH) " << std::setw(10) << "(3. EXIT)" "\033[0m" << std::endl;
         if (std::cin.eof())
-            break;
+            exit(0);
         else
+        {
+            std::cout <<  "\033[32m" << "ENTER COMMAND: " << "\033[0m";
             std::getline(std::cin, line);
-        if (!line.compare(add))
+        }
+        if (!line.compare("ADD"))
             PhoneBook.add_contacts();
-        else if (!line.compare(search))
+        else if (!line.compare("SEARCH"))
             PhoneBook.search_contacts();
-        else if (!line.compare(exit))
+        else if (!line.compare("EXIT"))
         {
             std::cout << "EXITING..." <<std::endl;
             sleep(1);
             break;
+        }
+        else
+        {
+            std::cout << "\033[31m" << "Error: Invalid command. Please use the provided commands." << "\033[0m" << std::endl;
+            sleep(1);
+            system("clear");
         }
         system("clear");
     }
