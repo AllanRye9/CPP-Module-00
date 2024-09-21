@@ -89,6 +89,30 @@ static void displaySuccess(void)
     std::cout << "\033[32m" << "Contact Added Successfully!" << "\033[0m" << std::endl;
 }
 
+static void drawLine(int l)
+{
+    for (int i = 0; i < l; i++)
+    {
+        std::cout << "-";
+    }
+    std::cout << std::endl;
+}
+
+static int validator(str s, int x)
+{
+    int i = 0;
+    if (!s[0])
+        return 1;
+    while(s[i])
+    {
+        if (s[0] == '\0' || (x < 0 && x == -2147483648) || (x > 7 && x >= 2147483647) 
+            || !(s[i] >= '0' && s[i] <= '9') || s[i] == ' ' || s[i] == '\t')
+            return 1;
+        i++;
+    }
+    return 0;
+}
+
 int PhoneBook::add_contacts()
 {
     str name;
@@ -175,30 +199,6 @@ int PhoneBook::add_contacts()
         contact_nb++;
     sleep(1);
     system("clear");
-    return 0;
-}
-
-static void drawLine(int l)
-{
-    for (int i = 0; i < l; i++)
-    {
-        std::cout << "-";
-    }
-    std::cout << std::endl;
-}
-
-static int validator(str s, int x)
-{
-    int i = 0;
-    if (!s[0])
-        return 1;
-    while(s[i])
-    {
-        if (s[0] == '\0' || (x < 0 && x == -2147483648) || (x > 7 && x >= 2147483647) 
-            || !(s[i] >= '0' && s[i] <= '9') || s[i] == ' ' || s[i] == '\t')
-            return 1;
-        i++;
-    }
     return 0;
 }
 
