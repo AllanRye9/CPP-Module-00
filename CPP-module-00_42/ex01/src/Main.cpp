@@ -30,6 +30,8 @@ int main()
             std::cout << std::endl;
             break;
         }
+        // std::isspace(line[i])
+        //compare only takes the word ADD only need to adjust.
         if (!line.compare("ADD"))
             PhoneBook.add_contacts();
         else if (!line.compare("SEARCH"))
