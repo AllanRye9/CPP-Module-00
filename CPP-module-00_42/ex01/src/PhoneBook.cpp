@@ -57,16 +57,6 @@ static int readInput(str output)
     return 1;
 }
 
-static void errorMessage(void)
-{
-    std::cout << "\033[31m" << "Error: Input cannot be empty or contain spaces, tabs, or new lines and only 1 byte." << "\033[0m" << std::endl;
-}
-
-static void displaySuccess(void)
-{
-    std::cout << "\033[32m" << "Contact Added Successfully!" << "\033[0m" << std::endl;
-}
-
 static int isNumeric(str s)
 {
     int i = 0;
@@ -78,7 +68,7 @@ static int isNumeric(str s)
     }
     if (s.size() <= 0 || s.size() > 15)
         return 0;
-       while(s[i] && !isSpace(s))
+    while(s[i])
     {
         if (!(s[i] >= '0' && s[i] <= '9') || (s[i] == '\n' || s[i]== '\0'))
             return 0;
@@ -87,6 +77,16 @@ static int isNumeric(str s)
         i++;
     }
     return 1;
+}
+
+static void errorMessage(void)
+{
+    std::cout << "\033[31m" << "Error: Input cannot be empty or contain spaces, tabs, or new lines and only 1 byte." << "\033[0m" << std::endl;
+}
+
+static void displaySuccess(void)
+{
+    std::cout << "\033[32m" << "Contact Added Successfully!" << "\033[0m" << std::endl;
 }
 
 int PhoneBook::add_contacts()
