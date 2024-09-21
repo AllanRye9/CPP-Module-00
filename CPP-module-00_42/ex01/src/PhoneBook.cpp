@@ -31,7 +31,7 @@ static int isSpace(const str input)
 static int isValidInput(const str input) {
     int i = 0;
 
-    if (input.size() <= 0)
+    if (input.size() <= 0 || input.size() > 256)
         return 1;
     while(input[i])
     {
@@ -59,7 +59,7 @@ static int readInput(str output)
 
 static void errorMessage(void)
 {
-    std::cout << "\033[31m" << "Error: Input cannot be empty or contain spaces, tabs, or new lines." << "\033[0m" << std::endl;
+    std::cout << "\033[31m" << "Error: Input cannot be empty or contain spaces, tabs, or new lines and only 1 byte." << "\033[0m" << std::endl;
 }
 
 static void displaySuccess(void)
@@ -71,7 +71,14 @@ static int isNumeric(str s)
 {
     int i = 0;
 
-    while(s[i] && !isSpace(s))
+    if (std::cin.eof())
+    {
+        std::cout << std::endl;
+        exit(0);
+    }
+    if (s.size() <= 0 || s.size() > 15)
+        return 0;
+       while(s[i] && !isSpace(s))
     {
         if (!(s[i] >= '0' && s[i] <= '9') || (s[i] == '\n' || s[i]== '\0'))
             return 0;
@@ -142,7 +149,7 @@ int PhoneBook::add_contacts()
         }
         if (!value)
         {
-            std::cout << "\033[31m" << "Error: Phone number must be numeric." << "\033[0m" << std::endl;
+            std::cout << "\033[31m" << "Error: Phone number must be numeric and length of 15 max." << "\033[0m" << std::endl;
             value = 0;
         }
     }
@@ -211,7 +218,7 @@ void PhoneBook::search_contacts()
     system("clear");
     if (this->current_nb == 0)
     {
-        std::cout << "No Contact Found | Aborting ..." << std::endl; sleep(1); return ;
+        std::cout << "\033[31m" << "No Contact Found | Aborting ..." "\033[0m" << std::endl; sleep(1); return ;
     }
     drawLine(44);
     std::cout << std::setw(10) << "Index" << "|";

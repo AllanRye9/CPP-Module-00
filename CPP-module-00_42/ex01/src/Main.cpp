@@ -12,6 +12,14 @@
 
 #include "../include/head.hpp"
 
+static int checker(const str cmd, const str arg)
+{
+    if (!arg.compare(cmd))
+        return 0;
+    else
+        return 1;
+}
+
 int main()
 {
     PhoneBook PhoneBook;
@@ -30,19 +38,17 @@ int main()
             std::cout << std::endl;
             break;
         }
-        // std::isspace(line[i])
-        //compare only takes the word ADD only need to adjust.
-        if (!line.compare("ADD"))
+        if (!checker(line, "ADD"))
             PhoneBook.add_contacts();
-        else if (!line.compare("SEARCH"))
+        else if (!checker(line, "SEARCH"))
             PhoneBook.search_contacts();
-        else if (!line.compare("EXIT"))
+        else if (!checker(line, "EXIT"))
         {
             std::cout << "EXITING..." <<std::endl;
             sleep(1);
             break;
         }
-        else if (line.compare("ADD") || line.compare("SEARCH"))
+        else if (checker(line, "ADD") || checker(line, "SEARCH") || checker(line, "EXIT"))
         {
             std::cout << "\033[31m" << "Error: Invalid command. Please use the provided commands." << "\033[0m" << std::endl;
             sleep(1);
